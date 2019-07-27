@@ -1,0 +1,313 @@
+knowledge base nazwa
+
+ facets
+
+single yes;
+ask yes;
+
+decyzja:
+single no;
+chcesz_pracowaæ:
+		val oneof{"tak", "nie"};
+preferowany_tryb_pracy:
+		query "Jaki tryb pracy wolisz (mo¿esz wybraæ kilka):"
+		val someof{"praca umys³owa", "praca fizyczna"};
+ulubione_przedmioty:
+		query "Jakie dziedziny nauki lubisz [mo¿esz wybraæ kilka]:"
+		val someof{"chemia", "fizyka", "matematyka", "informatyka", "jêzyki obce", "jêzyk polski", "sztuka", "muzyka", "biologia", "geografia","wychowanie fizyczne"};
+zdolnoœci_logiczno_matematyczne;
+ocena_z_matematyki:
+	query "Podaj ocenê z matematyki w szkole œredniej:"
+	val oneof {5,4,3,2};
+matura_z_matematyki:
+	query "Podaj wartoœc w procentach z matury z matematyki:"
+	unit "%"
+	val range<0,100>;
+matura_z_chemii:
+	query "Podaj wartoœc w procentach z matury z chemii"
+	unit "%"
+	val range<0,100>;
+matura_z_biologii:
+	query "Podaj wartoœc w procentach z matury z biologii:"
+	unit "%"
+	val range<0,100>;
+matura_z_jêzyka_obcego:
+	query "Podaj wartoœc w procentach z matury z jêzyka obcego:"
+	unit "%"
+	val range<0,100>;
+poziom_matematyczny;
+poziom_logiczny;
+umiejêtnoœæ_rozwi¹zywania_problemów_logicznych:
+		val oneof{"œwietnie sobie radzê", "to nie moja bajka"};
+zagadka_logiczna:
+		query "Co nale¿y wstawiæ w miejsce znaku zapytania?"
+		val range<0,1000>
+		picture "zagadka.jpg";
+zagadka_ogrodnicza1:
+		query "Co to za kwiat?"
+		val oneof{"niezapominajka", "rododendron","malwa","pelargonia"}
+		picture "niezapominajki.jpg";
+zagadka_ogrodnicza2:
+		query "Co to za kwiat"
+		val oneof{"niezapominajka", "rododendron","malwa","pelargonia"}
+		picture "rododendron.jpg";
+praca_z_komputerami:
+		val oneof{"tak", "nie"};
+praca_z_ludŸmi:
+		val oneof{"tak", "nie"};
+zdolnoœci_motoryczne;
+iloœæ_pompek:
+		query "Ile pompek robisz maksymalnie?"
+		val range<0,1000>;
+podci¹ganie:
+		query "Ile razy umiesz siê podci¹gn¹æ?"
+		val range<0,1000>;
+lubisz_sport:
+	val oneof{"tak", "nie"};
+gibkoœæ:
+	val oneof{"wykonuj¹c sk³on dotkniesz palcami d³oni palce stóp", "slaba"};
+bieganie:
+	val oneof{"10km poni¿ej godziny","nie przebiegnê 5 kilometrów"};
+p³ywanie:
+	val oneof{"potrafiê", "nie potrafiê"};
+
+uzdolnienia_artystyczne:
+		val oneof{"tak", "nie"};
+umiejêtnosæ_gry_na_instrumencie:
+		val oneof{"tak", "nie"};
+lubisz_roœliny;
+predyspozycje_do_bycia_lekarzem;
+zdolnoœci_jezykowe;
+znasz_biegle_wiêcej_ni¿_jeden_jêzyk;
+wiedza_o_roœlinach;
+lubisz_czytaæ_ksi¹¿ki;
+end;
+
+
+
+ rules
+0001: decyzja="IdŸ na informatykê." if
+		(zdolnoœci_logiczno_matematyczne="wysokie" |
+		zdolnoœci_logiczno_matematyczne="œrednie"),
+		preferowany_tryb_pracy="praca umys³owa",
+		praca_z_komputerami="tak",
+		chcesz_pracowaæ="tak",
+		(ulubione_przedmioty="matematyka"|
+		ulubione_przedmioty="informatyka");
+
+0002: decyzja="Zostañ sportowcem." if
+		lubisz_sport="tak",
+		zdolnoœci_motoryczne="wysokie",
+		preferowany_tryb_pracy="praca fizyczna",
+		chcesz_pracowaæ="tak";
+
+0003: decyzja="Zostañ trenerem sportowym." if
+		zdolnoœci_motoryczne="niskie",
+		lubisz_sport="tak",
+		praca_z_ludŸmi="tak",
+		preferowany_tryb_pracy="praca fizyczna",
+		chcesz_pracowaæ="tak";
+
+0004: decyzja="Zostañ naukowcem" if
+		zdolnoœci_logiczno_matematyczne="wysokie",
+		(ulubione_przedmioty="matematyka"|
+		ulubione_przedmioty="informatyka"|
+		ulubione_przedmioty="biologia"|
+		ulubione_przedmioty="chemia"|
+		ulubione_przedmioty="fizyka"|
+		ulubione_przedmioty="geografia"),
+		chcesz_pracowaæ="tak";
+
+0005: decyzja="Zostañ artyst¹" if
+		uzdolnienia_artystyczne="tak",
+		ulubione_przedmioty="sztuka",
+		chcesz_pracowaæ="tak";
+
+0006: decyzja="Zostañ muzykiem" if
+		umiejêtnosæ_gry_na_instrumencie="tak",
+		ulubione_przedmioty="muzyka",
+		chcesz_pracowaæ="tak";
+
+0007:decyzja="IdŸ na medycynê" if
+		(ulubione_przedmioty="biologia"|
+		ulubione_przedmioty="chemia"|
+		ulubione_przedmioty="fizyka"),
+		predyspozycje_do_bycia_lekarzem="tak",
+		preferowany_tryb_pracy="praca umys³owa",
+		chcesz_pracowaæ="tak";
+
+0008: decyzja="Zostañ ogrodnikiem" if
+		wiedza_o_roœlinach="wysoka",
+		lubisz_roœliny="tak",
+		preferowany_tryb_pracy="praca fizyczna",
+		chcesz_pracowaæ="tak";
+
+0009: decyzja="IdŸ na prawo" if
+		(zdolnoœci_logiczno_matematyczne="wysokie" |
+		zdolnoœci_logiczno_matematyczne="œrednie"),
+		preferowany_tryb_pracy="praca umys³owa",
+		chcesz_pracowaæ="tak";
+
+0010: decyzja="IdŸ na filologiê" if
+		(ulubione_przedmioty="jêzyki obce"|
+		ulubione_przedmioty="jêzyk polski"),
+		zdolnoœci_jezykowe="wysokie",
+		preferowany_tryb_pracy="praca umys³owa",
+		chcesz_pracowaæ="tak";
+
+0011: decyzja="Zostañ pisarzem" if
+		lubisz_czytaæ_ksi¹¿ki="tak",
+		ulubione_przedmioty="jêzyk polski",
+		preferowany_tryb_pracy="praca umys³owa",
+		chcesz_pracowaæ="tak";
+
+0098: decyzja="Nie ma pracy w tym kraju dla ludzi z pañskimi umiejêtnoœciami." if
+		chcesz_pracowaæ="nie";
+
+0099: decyzja="Zostañ filozofem" if
+		chcesz_pracowaæ="tak",
+		(zdolnoœci_logiczno_matematyczne="niskie" |
+		praca_z_komputerami="nie"),
+		(lubisz_sport="nie" |
+		praca_z_ludŸmi="nie"),
+		(predyspozycje_do_bycia_lekarzem="nie" |
+		umiejêtnosæ_gry_na_instrumencie="nie"|
+		uzdolnienia_artystyczne="nie");
+
+0100: zdolnoœci_logiczno_matematyczne="wysokie" if
+		poziom_matematyczny="wysoki",
+		poziom_logiczny="wysoki";
+
+0101: zdolnoœci_logiczno_matematyczne="œrednie" if
+		poziom_matematyczny="œredni",
+		poziom_logiczny="wysoki";
+
+0102: zdolnoœci_logiczno_matematyczne="niskie" if
+		(poziom_matematyczny="niski"|
+		poziom_logiczny="niski");
+
+0103: zdolnoœci_motoryczne="wysokie" if
+		iloœæ_pompek=X, X>=10,
+		podci¹ganie=Y, Y>=8,
+		gibkoœæ="wykonuj¹c sk³on dotkniesz palcami d³oni palce stóp",
+		bieganie="10km poni¿ej godziny",
+		p³ywanie="potrafiê";
+
+0104: zdolnoœci_motoryczne="œrednie" if
+		(iloœæ_pompek=X, X>=5 |
+		podci¹ganie=Y, Y>=2),
+		gibkoœæ="wykonuj¹c sk³on dotkniesz palcami d³oni palce stóp",
+		bieganie="10km poni¿ej godziny";
+
+0105: zdolnoœci_motoryczne="niskie" if
+		iloœæ_pompek=X, X<5 |
+		podci¹ganie=Y, Y<2 |
+		gibkoœæ="slaba" |
+		bieganie="nie przebiegnê 5 kilometrów" |
+		p³ywanie="nie potrafiê";
+
+0106: predyspozycje_do_bycia_lekarzem="tak" if
+		matura_z_chemii=X, X>=90,
+		matura_z_biologii=Y, Y>=90;
+
+0107: predyspozycje_do_bycia_lekarzem="nie" if
+		matura_z_chemii=X, X<90 |
+		matura_z_biologii=Y, Y<90;
+
+0108: zdolnoœci_jezykowe="wysokie" if
+		matura_z_jêzyka_obcego=X, X>=90,
+		znasz_biegle_wiêcej_ni¿_jeden_jêzyk="tak";
+
+0109: zdolnoœci_jezykowe="niskie" if
+		(matura_z_jêzyka_obcego=X, X<90 |
+		znasz_biegle_wiêcej_ni¿_jeden_jêzyk="nie");
+
+0110: wiedza_o_roœlinach="wysoka" if
+		zagadka_ogrodnicza1="niezapominajka",
+		zagadka_ogrodnicza2="rododendron";
+
+0111: wiedza_o_roœlinach="œrednia" if
+		((zagadka_ogrodnicza1="rododendron"|
+		zagadka_ogrodnicza1="malwa"|
+		zagadka_ogrodnicza1="pelargonia"),
+		zagadka_ogrodnicza2="rododendron")|
+		(zagadka_ogrodnicza1="niezapominajka",
+		(zagadka_ogrodnicza2="niezapominajka"|
+		zagadka_ogrodnicza2="malwa"|
+		zagadka_ogrodnicza2="pelargonia"));
+
+0112: wiedza_o_roœlinach="niska" if
+		(zagadka_ogrodnicza1="rododendron"|
+		zagadka_ogrodnicza1="malwa"|
+		zagadka_ogrodnicza1="pelargonia"),
+		(zagadka_ogrodnicza2="niezapominajka"|
+		zagadka_ogrodnicza2="malwa"|
+		zagadka_ogrodnicza2="pelargonia");
+
+0200: poziom_matematyczny="wysoki" if
+		ocena_z_matematyki=X, X==5,
+		matura_z_matematyki=Y, Y>=90;
+
+0201: poziom_matematyczny="œredni" if
+		ocena_z_matematyki=X, X>2,
+		matura_z_matematyki=Y, Y>=70;
+
+0202: poziom_matematyczny="niski" if
+		ocena_z_matematyki=X, X<3 |
+		matura_z_matematyki=Y, Y<70;
+
+0203: poziom_logiczny="wysoki" if
+		zagadka_logiczna=Z, Z==15,
+		umiejêtnoœæ_rozwi¹zywania_problemów_logicznych="œwietnie sobie radzê";
+
+0204: poziom_logiczny="niski" if
+		(zagadka_logiczna=Z, Z<15|
+ 		zagadka_logiczna=Z, Z>15)|
+		umiejêtnoœæ_rozwi¹zywania_problemów_logicznych="to nie moja bajka";
+
+
+
+		
+
+ end;
+
+
+ control
+
+vignette("Doradca zawodowy", "Doradca kierunku kariery zawodowej", "Autor: Karolina Stêpieñ");
+setSysText(problem, "Kariera zawodowa");
+
+menu "Menu"
+1. "Decyzja"
+2. "Zdolnoœci logiczno_matematyczne"
+3. "Zdolnoœci motoryczne"
+4. "Predyspozycje do bycia lekarzem;"
+5. "Zdolnoœci jezykowe"
+6. "Wiedza o roœlinach"
+7. "Wyjœcie"
+
+case 1:
+	delNewFacts;
+	goal("decyzja=X");
+case 2:
+	delNewFacts;
+	goal("zdolnoœci_logiczno_matematyczne=X");
+case 3:
+	delNewFacts;
+	goal("zdolnoœci_motoryczne=X");
+case 4:
+	delNewFacts;
+	goal("predyspozycje_do_bycia_lekarzem=X");
+case 5:
+	delNewFacts;
+	goal("zdolnoœci_jezykowe=X");
+case 6:
+	delNewFacts;
+	goal("wiedza_o_roœlinach=X");
+case 7:
+	exit;
+end;
+
+ end;
+
+end;
